@@ -1,10 +1,11 @@
 <template>
-  <div class="test3">
-    <div>
+  <div class="warpper">
+    <div class="username">
       用户名：
       <input type="text" v-model="userName" />
     </div>
     <div class="msg" ref="box">
+      <div class="title">聊天窗口</div>
       <div
         class="msg-item"
         v-for="(item, index) in list"
@@ -14,7 +15,7 @@
         <p>{{ item.content }}</p>
       </div>
     </div>
-    <div class="input-group">
+    <div class="send-group">
       <input type="text" v-model="contentText" />
       <button @click="sendText">发送</button>
     </div>
@@ -44,7 +45,6 @@ export default {
     if (window.WebSocket) {
       const that = this;
       this.ws = new WebSocket("ws://192.168.1.88:8081");
-      console.log(this.ws);
       this.ws.onopen = function(e) {
         console.log("链接服务器成功");
       };
@@ -66,6 +66,7 @@ export default {
     //发送聊天信息
     sendText() {
       if (this.userName) {
+        console.log(this.ws);
         this.ws.send(
           JSON.stringify({ userName: this.userName, content: this.contentText })
         );
@@ -97,43 +98,57 @@ export default {
 </script>
 
 <style scoped lang="less">
-.test3 {
-  text-align: center;
-}
-
-.msg {
+.warpper {
   width: 960px;
-  height: 500px;
-  padding: 20px;
-  overflow: auto;
-  padding-top: 5px;
-  border: 1px solid red;
-  display: inline-block;
-  margin-bottom: 6px;
-
-  .msg-item {
-    position: relative;
-    overflow: hidden;
-    p {
-      display: inline-block;
-      border-radius: 40px;
-      background: #3c3d5a;
-      color: white;
-      float: left;
-      padding: 2px 12px;
-      margin: 0 0 2px 0;
-      max-width: 70%;
-      text-align: left;
-      box-sizing: border-box;
+  margin: 0 auto;
+  text-align: center;
+  .username {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  .msg {
+    width: 100%;
+    height: 500px;
+    padding: 20px;
+    overflow: auto;
+    padding-top: 5px;
+    border: 1px solid red;
+    display: inline-block;
+    margin-bottom: 6px;
+    box-sizing: border-box;
+    .title {
+      font-size: 16px;
+      text-align: center;
+      padding: 5px;
+      border-bottom: 1px dashed #ccc;
     }
-
-    &.mine {
+    .msg-item {
+      position: relative;
+      overflow: hidden;
       p {
-        float: right;
-        background: aquamarine;
+        display: inline-block;
+        border-radius: 40px;
+        background: #3c3d5a;
         color: white;
+        float: left;
+        padding: 2px 12px;
+        margin: 0 0 2px 0;
+        max-width: 70%;
+        text-align: left;
+        box-sizing: border-box;
+      }
+
+      &.mine {
+        p {
+          float: right;
+          background: aquamarine;
+          color: white;
+        }
       }
     }
+  }
+  .send-group {
+    text-align: right;
   }
 }
 </style>
